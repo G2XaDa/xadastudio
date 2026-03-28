@@ -220,7 +220,7 @@ export default function Hero(): React.JSX.Element {
           <div
             ref={digitalRef}
             className="font-black leading-none tracking-tight uppercase select-none md:-mt-3"
-            style={{ fontSize: "clamp(5.8rem, 19vw, 18rem)", color: "#0a0a0a", overflow: "hidden" }}
+            style={{ fontSize: "clamp(4rem, 19vw, 18rem)", color: "#0a0a0a", overflow: "hidden" }}
           >
             {"DIGITAL".split("").map((char, i) => (
               <motion.span
