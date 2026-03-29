@@ -1235,7 +1235,7 @@ body.nav-menu-open [data-cursor-canvas] {
 }
 
 .footer-headline__something {
-  font-size: clamp(5rem, 14vw, 13.5rem);
+  font-size: clamp(3.2rem, 14vw, 13.5rem);
   font-weight: 900;
   line-height: 0.9;
   letter-spacing: -0.03em;
