@@ -5,9 +5,9 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from "framer-motio
 
 const PROJECTS = [
   { id: "01", name: "Chas Concrete",  type: "Business Website", src: "/ChatGPT Image Mar 27, 2026, 03_22_01 AM.png", href: "https://www.chasconcretesolutions.com", rotate: -2 },
-  { id: "02", name: "Metarp",         type: "Business Website", src: "/preview3.png",                                href: "https://www.metarp.lt",                  rotate:  3 },
+  { id: "02", name: "S&T Concrete",   type: "Business Website", src: "/stconcrete.png",                              href: "https://www.st-concrete.com",            rotate:  3 },
   { id: "03", name: "Xada Shop",      type: "Ecommerce Store",  src: "/preview4.png",                                href: "https://www.xada-shop.com",              rotate: -1 },
-  { id: "04", name: "Prisiminkime",   type: "Custom Build",     src: "/ab.png",                                      href: "https://www.prisiminkime.lt",            rotate:  2 },
+  { id: "04", name: "Sourdough Construction", type: "Business Website", src: "/sourdough.png",                       href: "https://www.sourdoughconstructionllc.com", rotate:  2 },
 ];
 
 export default function WorkShowcase(): React.JSX.Element {
