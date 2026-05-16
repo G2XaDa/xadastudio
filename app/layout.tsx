@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Caveat } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -167,6 +168,7 @@ export default function RootLayout({
             {children}
           </TransitionProvider>
         </RevealProvider>
+        <Analytics />
       </body>
     </html>
   );
