@@ -92,77 +92,143 @@ export default function SkillsShowcase(): React.JSX.Element {
     // base transform — GSAP owns the centering so it can also drift it
     gsap.set(blurXRef.current, { xPercent: -50, yPercent: -50 });
 
-    // Single setup that runs on ALL viewport sizes — mobile gets the
-    // same pin + active-group cycling + bg shift + X drift as desktop;
-    // layout differences are handled in CSS via media queries.
-    //
-    // IMPORTANT: create the pin ST *first* so the pin-spacer is
-    // inserted inside .cap-wrap before the bg ST measures the wrap.
-    // Otherwise wrap reads as 100vh (no spacer yet) and the bg
-    // timeline finishes within the approach scroll.
-    const pinTl = gsap.timeline();
-    pinTl.to(
-      blurXRef.current,
-      {
-        x: "14vw",
-        y: "-9vh",
-        rotation: 70,
-        scale: 1.28,
+    // matchMedia split: pin works fine on desktop but breaks on mobile
+    // (iOS dynamic viewport + touch scroll velocity + locomotive-scroll
+    // make ScrollTrigger pin "teleport" on touch). Mobile gets a simpler
+    // non-pinned per-group reveal that scrolls naturally.
+    const mm = gsap.matchMedia();
+
+    // ── DESKTOP / TABLET ≥768px: pinned scrub ─────────────────────────
+    mm.add("(min-width: 768px)", () => {
+      // IMPORTANT: pin ST first so the pin-spacer is inserted inside
+      // .cap-wrap before the bg ST measures the wrap. Otherwise wrap
+      // reads as 100vh and the bg timeline finishes early.
+      const pinTl = gsap.timeline();
+      pinTl.to(
+        blurXRef.current!,
+        {
+          x: "14vw",
+          y: "-9vh",
+          rotation: 70,
+          scale: 1.28,
+          ease: "none",
+          duration: 2,
+        },
+        0,
+      );
+
+      const pinST = ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "+=260%",
+        pin: true,
+        scrub: 1.1,
+        animation: pinTl,
+        onUpdate: (self) => {
+          const idx = Math.min(
+            GROUPS.length - 1,
+            Math.floor(self.progress * GROUPS.length),
+          );
+          if (idx !== activeRef.current) {
+            activeRef.current = idx;
+            setActiveGroup(idx);
+          }
+        },
+      });
+
+      // Wrap now includes the 360vh pin-spacer → bg ST measures right.
+      // Phases (4.6 units → 460vh of scroll):
+      //   0   → 0.5  entry   white  → violet
+      //   0.5 → 1.0  hold    violet
+      //   1.0 → 2.3  pin 1→2 violet → blue
+      //   2.3 → 3.6  pin 2→3 blue   → plum
+      //   3.6 → 4.6  exit    plum   → white
+      const bgTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrap,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.4,
+        },
+      });
+      bgTl
+        .to("body", { backgroundColor: GROUP_BG[0], ease: "none", duration: 0.5 }, 0)
+        .to("body", { backgroundColor: GROUP_BG[1], ease: "none", duration: 1.3 }, 1.0)
+        .to("body", { backgroundColor: GROUP_BG[2], ease: "none", duration: 1.3 }, 2.3)
+        .to("body", { backgroundColor: PAGE_BG, ease: "none", duration: 1.0 }, 3.6);
+
+      ScrollTrigger.refresh();
+
+      return () => {
+        bgTl.scrollTrigger?.kill();
+        bgTl.kill();
+        pinST.kill();
+        pinTl.kill();
+        gsap.set("body", { backgroundColor: PAGE_BG });
+      };
+    });
+
+    // ── MOBILE <768px: no pin, body-bg shift + per-group reveal ───────
+    mm.add("(max-width: 767px)", () => {
+      // Body bg shift across full section visibility
+      const bgTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrap,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.6,
+        },
+      });
+      bgTl
+        .to("body", { backgroundColor: GROUP_BG[0], ease: "none", duration: 0.5 }, 0)
+        .to("body", { backgroundColor: GROUP_BG[1], ease: "none", duration: 1 }, 1.0)
+        .to("body", { backgroundColor: GROUP_BG[2], ease: "none", duration: 1 }, 2.0)
+        .to("body", { backgroundColor: PAGE_BG, ease: "none", duration: 0.4 }, 3.4);
+
+      // Subtle blurred-X drift
+      const xTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: wrap,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+      xTl.to(blurXRef.current!, {
+        x: "8vw",
+        y: "-7vh",
+        rotation: 50,
+        scale: 1.2,
         ease: "none",
-        duration: 2,
-      },
-      0,
-    );
+        duration: 1,
+      });
 
-    const pinST = ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: "+=260%",
-      pin: true,
-      scrub: 1.1,
-      animation: pinTl,
-      onUpdate: (self) => {
-        const idx = Math.min(
-          GROUPS.length - 1,
-          Math.floor(self.progress * GROUPS.length),
-        );
-        if (idx !== activeRef.current) {
-          activeRef.current = idx;
-          setActiveGroup(idx);
-        }
-      },
+      // Per-group reveal — each list group adds `.is-revealed` once it
+      // scrolls into view, persists. CSS uses .is-revealed alongside
+      // .is-active to trigger the bright text wipe on mobile.
+      const listGroups = Array.from(
+        wrap.querySelectorAll<HTMLDivElement>(".cap-list__group"),
+      );
+      const groupSTs = listGroups.map((el) =>
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 80%",
+          once: true,
+          onEnter: () => el.classList.add("is-revealed"),
+        }),
+      );
+
+      return () => {
+        bgTl.scrollTrigger?.kill();
+        bgTl.kill();
+        xTl.scrollTrigger?.kill();
+        xTl.kill();
+        groupSTs.forEach((st) => st.kill());
+        gsap.set("body", { backgroundColor: PAGE_BG });
+      };
     });
 
-    // Now the wrap includes the 360vh pin-spacer, so the bg ST
-    // measures correctly. Timeline phases (4.6 units → 460vh):
-    //   0    → 0.5  : entry  (50vh)   white  → violet
-    //   0.5  → 1.0  : hold violet (50vh)
-    //   1.0  → 2.3  : pin 1→2 (130vh) violet → blue
-    //   2.3  → 3.6  : pin 2→3 (130vh) blue   → plum
-    //   3.6  → 4.6  : exit  (100vh)   plum   → white  (smooth fade across the whole exit zone)
-    const bgTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: wrap,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 0.4,
-      },
-    });
-    bgTl
-      .to("body", { backgroundColor: GROUP_BG[0], ease: "none", duration: 0.5 }, 0)
-      .to("body", { backgroundColor: GROUP_BG[1], ease: "none", duration: 1.3 }, 1.0)
-      .to("body", { backgroundColor: GROUP_BG[2], ease: "none", duration: 1.3 }, 2.3)
-      .to("body", { backgroundColor: PAGE_BG, ease: "none", duration: 1.0 }, 3.6);
-
-    ScrollTrigger.refresh();
-
-    return () => {
-      bgTl.scrollTrigger?.kill();
-      bgTl.kill();
-      pinST.kill();
-      pinTl.kill();
-      gsap.set("body", { backgroundColor: PAGE_BG });
-    };
+    return () => mm.revert();
   }, []);
 
   const activeBlurb = GROUPS[activeGroup];
@@ -261,6 +327,12 @@ export default function SkillsShowcase(): React.JSX.Element {
                 key={g.label}
                 className={`cap-list__group ${gi === activeGroup ? "is-active" : ""}`}
               >
+                {/* mobile-only — desktop shows the group label in the left rail */}
+                <div className="cap-list__group-head" aria-hidden="true">
+                  <span className="cap-list__group-num">0{gi + 1}</span>
+                  <span className="cap-list__group-label">{g.label}</span>
+                  <span className="cap-list__group-blurb">{g.blurb}</span>
+                </div>
                 {g.services.map((si, idx) => (
                   <div
                     key={si}
