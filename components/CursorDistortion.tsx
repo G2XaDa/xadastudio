@@ -25,6 +25,14 @@ export default function SplashCursor({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Skip on touch / coarse-pointer devices — this is a cursor effect,
+    // phones don't have cursors, and the fluid sim is GPU-heavy enough
+    // to drop mobile frame rates into the single digits.
+    if (typeof window !== "undefined" &&
+        window.matchMedia("(pointer: coarse)").matches) {
+      return;
+    }
+
     /* ── pointer state ─────────────────────────────────────────── */
     function makePointer() {
       return {

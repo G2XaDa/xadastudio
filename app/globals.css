@@ -335,10 +335,13 @@ body {
     align-items: stretch;
   }
   .cap-blur-x {
-    position: fixed;
-    opacity: 0.32;
-    width: 90vw;
-    height: 90vw;
+    /* Stay absolute (not fixed) on mobile so it doesn't repaint a
+       giant blurred layer over every other section during scroll.
+       Reduced blur radius — filter:blur is expensive on mobile GPUs. */
+    opacity: 0.3;
+    width: 75vw;
+    height: 75vw;
+    filter: blur(40px);
   }
 
   /* Desktop rail (group nav + detail panel) is replaced by per-group
