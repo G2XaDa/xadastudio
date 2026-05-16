@@ -326,8 +326,19 @@ export default function Footer(): React.JSX.Element {
           </a>
 
           <div ref={socialsRef} className="footer-socials">
-            {(["Facebook", "Instagram", "TikTok"] as const).map((name) => (
-              <a key={name} href="#" className="footer-social-link" aria-label={`Follow on ${name}`}>
+            {([
+              { name: "Facebook",  href: "https://www.facebook.com/profile.php?id=61583792437330" },
+              { name: "Instagram", href: "https://www.instagram.com/xadastudio/" },
+              { name: "TikTok",    href: "https://www.tiktok.com/@xadahub" },
+            ] as const).map(({ name, href }) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-link"
+                aria-label={`Follow on ${name}`}
+              >
                 <span className="footer-social-link__inner">
                   <span className="footer-social-link__top">{name}</span>
                   <span className="footer-social-link__bot" aria-hidden="true">{name}</span>

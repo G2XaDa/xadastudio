@@ -11,18 +11,24 @@ const CONTACTS = [
     desc: "Got a project in mind? Start here.",
     accent: "#c084fc",
   },
-  {
-    label: "Careers",
-    email: "hello@xadastudio.com",
-    desc: "Want to join the team? We'd love to hear from you.",
-    accent: "#818cf8",
-  },
 ] as const;
 
 const SOCIALS = [
-  { label: "Instagram", handle: "@xadastudio", href: "#" },
-  { label: "LinkedIn",  handle: "Xada Studio",  href: "#" },
-  { label: "X / Twitter", handle: "@xadastudio", href: "#" },
+  {
+    label: "Instagram",
+    handle: "@xadastudio",
+    href: "https://www.instagram.com/xadastudio/",
+  },
+  {
+    label: "TikTok",
+    handle: "@xadahub",
+    href: "https://www.tiktok.com/@xadahub",
+  },
+  {
+    label: "Facebook",
+    handle: "Xada Studio",
+    href: "https://www.facebook.com/profile.php?id=61583792437330",
+  },
 ] as const;
 
 export default function ContactClient() {
@@ -259,6 +265,8 @@ export default function ContactClient() {
               <a
                 key={s.label}
                 href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 onMouseEnter={() => setHoveredSocial(i)}
                 onMouseLeave={() => setHoveredSocial(null)}
                 style={{

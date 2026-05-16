@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { DM_Sans, Caveat } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
 import CursorDistortion from "@/components/CursorDistortion";
 import { TransitionProvider } from "@/components/PageTransition";
+import { RevealProvider } from "@/components/Preloader";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
+  display: "swap",
+});
+
+// Handwritten font used for the testimonial sticky-notes.
+const caveat = Caveat({
+  subsets: ["latin"],
+  variable: "--font-caveat",
   display: "swap",
 });
 
@@ -95,6 +103,11 @@ const ORG_JSON_LD = {
     name: "Titas Bugailiškis",
     jobTitle: "Developer & Founder",
   },
+  sameAs: [
+    "https://www.instagram.com/xadastudio/",
+    "https://www.tiktok.com/@xadahub",
+    "https://www.facebook.com/profile.php?id=61583792437330",
+  ],
   areaServed: "Worldwide",
   knowsAbout: [
     "Web Design",
@@ -136,7 +149,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full ${dmSans.variable}`}>
+    <html lang="en" className={`h-full ${dmSans.variable} ${caveat.variable}`}>
       <body className="min-h-full antialiased">
         <script
           type="application/ld+json"
@@ -146,12 +159,14 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }}
         />
-        <TransitionProvider>
-          <CursorDistortion />
-          <SmoothScroll />
-          <Navbar />
-          {children}
-        </TransitionProvider>
+        <RevealProvider>
+          <TransitionProvider>
+            <CursorDistortion />
+            <SmoothScroll />
+            <Navbar />
+            {children}
+          </TransitionProvider>
+        </RevealProvider>
       </body>
     </html>
   );

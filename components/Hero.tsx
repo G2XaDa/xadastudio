@@ -4,6 +4,7 @@ import { motion, MotionConfig, useMotionValue, useSpring } from "framer-motion";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useReveal } from "@/components/Preloader";
 
 const EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 const BACK: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
@@ -12,6 +13,9 @@ const WE_BUILD    = "We Build";
 const EXPERIENCES = "Experiences";
 
 export default function Hero(): React.JSX.Element {
+  // Hold the intro until the loading screen lifts, so it plays in full view.
+  const { revealed } = useReveal();
+
   const ctaRef = useRef<HTMLButtonElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -89,6 +93,7 @@ export default function Hero(): React.JSX.Element {
 
   // ── Page-load glow animations (set via JS so hover can override them) ─
   useEffect(() => {
+    if (!revealed) return;
     weBuildRefs.current.forEach((el, i) => {
       if (!el || WE_BUILD[i] === " ") return;
       el.style.animation = `glow-letter1 1.6s ease-in-out ${(0.42 + i * 0.09).toFixed(2)}s both`;
@@ -99,7 +104,7 @@ export default function Hero(): React.JSX.Element {
     });
     const t = setTimeout(() => { introComplete.current = true; }, 4000);
     return () => clearTimeout(t);
-  }, []);
+  }, [revealed]);
 
   // ── Hover proximity glow ─────────────────────────────────────────────
   useEffect(() => {
@@ -167,7 +172,7 @@ export default function Hero(): React.JSX.Element {
           ref={topBarRef}
           className="flex items-center justify-between"
           initial={{ clipPath: "inset(0 100% 0 0)" }}
-          animate={{ clipPath: "inset(0 0% 0 0)" }}
+          animate={{ clipPath: revealed ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}
           transition={{ duration: 0.9, ease: EXPO }}
         >
           <span
@@ -197,7 +202,7 @@ export default function Hero(): React.JSX.Element {
               userSelect: "none",
             }}
             initial={{ clipPath: "inset(0 100% 0 0)" }}
-            animate={{ clipPath: "inset(0 0% 0 0)" }}
+            animate={{ clipPath: revealed ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}
             transition={{ duration: 1.0, delay: 0.35, ease: EXPO }}
           >
             {WE_BUILD.split("").map((char, i) => (
@@ -227,7 +232,10 @@ export default function Hero(): React.JSX.Element {
                 key={i}
                 className="inline-block"
                 initial={{ y: 64, clipPath: "inset(110% 0 0 0)" }}
-                animate={{ y: 0, clipPath: "inset(0 0 0 0)" }}
+                animate={{
+                  y: revealed ? 0 : 64,
+                  clipPath: revealed ? "inset(0 0 0 0)" : "inset(110% 0 0 0)",
+                }}
                 transition={{ duration: 0.55, delay: 0.65 + i * 0.065, ease: BACK }}
               >
                 {char}
@@ -248,7 +256,7 @@ export default function Hero(): React.JSX.Element {
               userSelect: "none",
             }}
             initial={{ clipPath: "inset(0 100% 0 0)" }}
-            animate={{ clipPath: "inset(0 0% 0 0)" }}
+            animate={{ clipPath: revealed ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}
             transition={{ duration: 0.9, delay: 1.45, ease: EXPO }}
           >
             {EXPERIENCES.split("").map((char, i) => (
@@ -274,7 +282,7 @@ export default function Hero(): React.JSX.Element {
           ref={ctaRef2}
           className="flex flex-col items-center gap-3 md:mt-10 md:flex-row md:items-end md:justify-between"
           initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: revealed ? 1 : 0, y: revealed ? 0 : 16 }}
           transition={{ duration: 0.6, delay: 1.9, ease: EXPO }}
         >
           <motion.button
@@ -303,7 +311,7 @@ export default function Hero(): React.JSX.Element {
           ref={bottomRef}
           className="flex items-center gap-5 md:mt-8"
           initial={{ clipPath: "inset(0 100% 0 0)" }}
-          animate={{ clipPath: "inset(0 0% 0 0)" }}
+          animate={{ clipPath: revealed ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}
           transition={{ duration: 0.9, delay: 2.1, ease: EXPO }}
         >
           <div className="h-px flex-1" style={{ background: "rgba(0,0,0,0.07)" }} />

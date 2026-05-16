@@ -47,463 +47,330 @@ body {
   100% { -webkit-text-stroke-color: rgba(0,0,0,0.6);   filter: none; }
 }
 
-/* ── Service Overlay ────────────────────────────────────────────── */
-.service-overlay {
-  position: fixed;
-  z-index: 200;
-  background: #0c0c0f;
-  overflow: hidden;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(1.5rem, 4vw, 4rem);
-}
-
-.overlay-close {
-  position: absolute;
-  top: clamp(1.25rem, 3vw, 2rem);
-  right: clamp(1.25rem, 3vw, 2rem);
-  width: 2.5rem;
-  height: 2.5rem;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: border-color 0.3s ease;
-  padding: 0;
-}
-
-.overlay-close:hover {
-  border-color: rgba(167, 139, 250, 0.5);
-}
-
-.overlay-close span {
-  position: absolute;
-  width: 0.9rem;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.6);
-  display: block;
-}
-
-.overlay-close span:first-child { transform: rotate(45deg); }
-.overlay-close span:last-child  { transform: rotate(-45deg); }
-
-.overlay-bg-number {
-  position: absolute;
-  bottom: -0.1em;
-  right: -0.05em;
-  font-size: clamp(10rem, 28vw, 26rem);
-  font-weight: 900;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.04);
-  pointer-events: none;
-  user-select: none;
-  letter-spacing: -0.02em;
-  z-index: 0;
-}
-
-.overlay-content {
+/* ── SkillsShowcase / Capabilities ───────────────────────────────── */
+/* Wrapper exists so the body-bg ScrollTrigger can use it as its trigger.
+   Its height includes the pin-spacer GSAP inserts around the section,
+   so "bottom top" actually fires when the section's *visible* bottom
+   hits the viewport top (not at pin start). */
+.cap-wrap {
   position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-  padding-top: 3rem;
 }
 
-.overlay-header {
-  max-width: 900px;
-}
-
-.overlay-index {
-  display: block;
-  font-size: 0.65rem;
-  font-weight: 900;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: rgba(167, 139, 250, 0.6);
-  margin-bottom: 1rem;
-}
-
-.overlay-title {
-  font-size: clamp(2.8rem, 7vw, 7rem);
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  text-transform: uppercase;
-  color: #ffffff;
-  line-height: 0.95;
-  margin: 0 0 1.25rem 0;
-}
-
-.overlay-tagline {
-  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.35);
-  letter-spacing: 0.02em;
-  margin: 0;
-}
-
-.overlay-rule {
-  width: 100%;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.07);
-  margin: clamp(1.5rem, 3vh, 2.5rem) 0;
-}
-
-.overlay-body {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(1.5rem, 3vw, 3rem);
-  flex: 1;
-}
-
-@media (max-width: 767px) {
-  .overlay-body {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    overflow-y: auto;
-  }
-}
-
-.overlay-col-label {
-  display: block;
-  font-size: 0.6rem;
-  font-weight: 900;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: rgba(167, 139, 250, 0.55);
-  margin-bottom: 0.75rem;
-}
-
-.overlay-col-text {
-  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.45);
-  line-height: 1.75;
-  margin: 0;
-}
-
-.overlay-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: clamp(1rem, 2vh, 1.5rem);
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.overlay-cta {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: transparent;
-  border: 1px solid rgba(167, 139, 250, 0.3);
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  padding: 0.875rem 1.75rem;
-  cursor: pointer;
-  transition: border-color 0.3s ease, background 0.3s ease;
-}
-
-.overlay-cta:hover {
-  border-color: rgba(167, 139, 250, 0.7);
-  background: rgba(167, 139, 250, 0.06);
-}
-
-.overlay-cta-arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.overlay-cta:hover .overlay-cta-arrow {
-  transform: translateX(4px);
-}
-
-.overlay-close-hint {
-  font-size: 0.6rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.15);
-}
-
-@media (max-width: 767px) {
-  .overlay-close-hint { display: none; }
-}
-
-/* ── SkillsShowcase ──────────────────────────────────────────────── */
-.skills-section {
+/* Section is transparent — the page's <body> background is animated by
+   GSAP through violet → blue → plum and back to white over the section's
+   full scroll lifecycle, so there's no section-to-section boundary line. */
+.cap-section {
   position: relative;
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  color: #ffffff;
 }
 
+.cap-blur-x {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: clamp(420px, 55vw, 760px);
+  height: clamp(420px, 55vw, 760px);
+  filter: blur(70px);
+  opacity: 0.42;
+  pointer-events: none;
+  will-change: transform;
+}
+.cap-blur-x svg { width: 100%; height: 100%; display: block; }
 
-.skills-inner {
+.cap-inner {
   position: relative;
-  z-index: 10;
-  width: 100%;
+  z-index: 2;
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 0 clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(5.5rem, 9vh, 7.5rem) clamp(1.5rem, 4vw, 4rem) clamp(2rem, 4vh, 3.5rem);
 }
 
-.skills-topbar {
-  position: absolute;
-  top: clamp(6rem, 9vh, 7.5rem);
-  left: clamp(1.5rem, 4vw, 4rem);
-  right: clamp(1.5rem, 4vw, 4rem);
-}
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(0.75rem, 1.5vw, 1.25rem);
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-@media (max-width: 900px) {
-  .skills-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 580px) {
-  .skills-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 767px) {
-  /* Force 2 columns on mobile so all 6 cards fit in 100vh */
-  .skills-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-  }
-
-  .skill-card {
-    padding: 0.875rem;
-  }
-
-  .card-desc {
-    font-size: 0.65rem;
-    line-height: 1.5;
-    line-clamp: 2;
-    -webkit-line-clamp: 2;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-footer {
-    margin-top: 0.75rem;
-    padding-top: 0.5rem;
-  }
-
-  /* Hide WE BUILD THIS. on mobile */
-  .chapter-text--2 {
-    display: none;
-  }
-}
-
-.chapter-text {
-  position: absolute;
-  z-index: 10;
-  font-family: var(--font-display);
-  pointer-events: none;
-  left: clamp(1.5rem, 4vw, 4rem);
-  line-height: 1;
-}
-
-.chapter-text--1 {
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.chapter-text--2 {
-  bottom: 8%;
-}
-
-.skill-card {
-  position: relative;
-  border: 1px solid rgba(109, 40, 217, 0.12);
-  border-radius: 2px;
-  padding: clamp(1.25rem, 2.5vw, 2rem);
-  overflow: hidden;
-  transition: border-color 0.4s ease;
-  cursor: default;
-}
-
-.skill-card.is-hovered {
-  border-color: rgba(109, 40, 217, 0.5);
-}
-
-/* Frosted glass base */
-.card-glass {
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
-  border-radius: inherit;
-  z-index: 0;
-}
-
-/* Direction-aware dark flood fill */
-.card-fill {
-  position: absolute;
-  inset: 0;
-  background: #0c0c0f;
-  z-index: 1;
-  pointer-events: none;
-  will-change: clip-path;
-  clip-path: inset(0 0 100% 0); /* hidden by default */
-}
-
-/* Giant outline number — background of dark state */
-.card-bg-number {
-  position: absolute;
-  bottom: -0.15em;
-  right: -0.05em;
-  font-size: clamp(5rem, 10vw, 8.5rem);
-  font-weight: 900;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.07);
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  user-select: none;
-  letter-spacing: -0.02em;
-}
-
-.skill-card.is-hovered .card-bg-number {
-  opacity: 1;
-}
-
-/* Shimmer layer — above fill */
-.card-specular {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.skill-card.is-hovered .card-specular {
-  opacity: 1;
-}
-
-.card-number,
-.card-title,
-.card-desc,
-.card-footer {
-  position: relative;
-  z-index: 4;
-}
-
-.card-number {
-  font-size: clamp(0.6rem, 0.9vw, 0.75rem);
-  font-weight: 900;
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: rgba(109, 40, 217, 0.55);
-  display: block;
-  margin-bottom: clamp(1rem, 2vw, 1.5rem);
-}
-
-.card-title {
-  font-size: clamp(1.1rem, 2vw, 1.75rem);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: #0a0a0a;
-  line-height: 1.05;
-  margin: 0 0 0.75rem 0;
-}
-
-.card-desc {
-  font-size: clamp(0.7rem, 1vw, 0.8rem);
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: rgba(0, 0, 0, 0.4);
-  line-height: 1.65;
-  margin: 0;
-  max-width: 28ch;
-}
-
-.card-footer {
+/* top bar — hero motif: Capabilities ———— 0X / 03 */
+.cap-topbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: clamp(1rem, 2vw, 1.75rem);
-  padding-top: clamp(0.75rem, 1.5vw, 1rem);
+  gap: 1.5rem;
 }
-
-.card-rule {
+.cap-topbar__label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  white-space: nowrap;
+}
+.cap-topbar__rule {
   flex: 1;
   height: 1px;
-  background: rgba(0, 0, 0, 0.07);
-  transition: background 0.4s ease;
+  background: rgba(255, 255, 255, 0.15);
+}
+.cap-topbar__num {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.65);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.skill-card:hover .card-rule {
-  background: rgba(109, 40, 217, 0.22);
+/* main split */
+.cap-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+  min-height: 0;
+  padding-top: clamp(2rem, 4vh, 3.5rem);
 }
 
-.card-arrow {
-  font-size: 0.9rem;
-  color: rgba(0, 0, 0, 0.18);
-  transition: color 0.3s ease, transform 0.3s ease;
-  margin-left: 0.875rem;
+/* ── left rail ── */
+.cap-rail {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vh, 2.5rem);
 }
-
-.skill-card:hover .card-arrow {
-  color: rgba(109, 40, 217, 0.65);
-  transform: translateX(4px);
+.cap-rail__eyebrow {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
 }
-
-/* Text inversion when dark fill is active */
-.skill-card.is-hovered .card-number {
-  color: rgba(167, 139, 250, 0.7);
-  transition: color 0.3s ease;
+.cap-groups {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.35rem, 0.9vh, 0.75rem);
 }
-
-.skill-card.is-hovered .card-title {
+.cap-group {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  opacity: 0.3;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cap-group.is-active {
+  opacity: 1;
+  transform: translateX(6px);
+}
+.cap-group__num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.4s ease;
+}
+.cap-group.is-active .cap-group__num {
+  color: #e9d5ff;
+}
+/* Group name uses a two-layer reveal — dim layer always visible,
+   bright white layer wipes in left → right when the group is active. */
+.cap-group__name {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+.cap-group__name-dim {
+  color: rgba(255, 255, 255, 0.45);
+  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cap-group.is-active .cap-group__name-dim {
+  color: rgba(255, 255, 255, 0.65);
+}
+.cap-group__name-bright {
+  position: absolute;
+  top: 0;
+  left: 0;
   color: #ffffff;
-  transition: color 0.3s ease;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cap-group.is-active .cap-group__name-bright {
+  clip-path: inset(0 0% 0 0);
 }
 
-.skill-card.is-hovered .card-desc {
+/* detail panel — updates on hover or, by default, shows the active group */
+.cap-detail {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-top: clamp(1rem, 2vh, 1.5rem);
+  max-width: 32ch;
+  min-height: clamp(5rem, 12vh, 8rem);
+}
+.cap-detail__inner {
+  animation: cap-fade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes cap-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.cap-detail__tagline {
+  display: block;
+  font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+}
+.cap-detail__text {
+  margin: 0;
+  font-size: clamp(0.75rem, 1vw, 0.9rem);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── right list ── */
+.cap-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vh, 1.6rem);
+}
+.cap-list__group {
+  display: flex;
+  flex-direction: column;
+  /* dimming is per-title now (two-layer reveal), not group-level opacity */
+}
+.cap-service {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 0.85rem;
+  padding: clamp(0.1rem, 0.4vh, 0.35rem) 0;
+  cursor: default;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cap-service.is-hovered {
+  transform: translateX(14px);
+}
+/* Two-layer reveal: dim text always visible, bright white text wipes
+   in left → right via clip-path. When the GROUP activates, all of its
+   titles wipe in with a per-item stagger (--i is the index within the
+   group, set inline in JSX). On HOVER the stagger is bypassed for a
+   quick reveal of just that item. */
+.cap-service__title {
+  position: relative;
+  display: inline-block;
+  font-size: clamp(1.9rem, 4.4vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  line-height: 1.04;
+  white-space: nowrap;
+}
+.cap-service__title-dim {
+  color: rgba(255, 255, 255, 0.22);
+  transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cap-list__group.is-active .cap-service__title-dim {
+  color: rgba(255, 255, 255, 0.32);
+}
+.cap-service.is-hovered .cap-service__title-dim {
   color: rgba(255, 255, 255, 0.5);
-  transition: color 0.3s ease;
+}
+.cap-service__title-bright {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #ffffff;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.9s cubic-bezier(0.16, 1, 0.3, 1)
+              calc(var(--i, 0) * 0.09s);
+}
+.cap-list__group.is-active .cap-service__title-bright {
+  clip-path: inset(0 0% 0 0);
+}
+.cap-service.is-hovered .cap-service__title-bright {
+  clip-path: inset(0 0% 0 0);
+  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0s;
+}
+.cap-service__arrow {
+  font-size: clamp(0.95rem, 1.5vw, 1.3rem);
+  color: #e9d5ff;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cap-service.is-hovered .cap-service__arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+.cap-service__tagline {
+  display: none; /* desktop: the detail shows in the left panel */
 }
 
-.skill-card.is-hovered .card-rule {
-  background: rgba(167, 139, 250, 0.25);
-}
+/* ── mobile: same pinned behaviour as desktop. Layout uses the
+   active group label as the hero element (huge "CRAFT" / "BUILD" /
+   "GROW" word in the centre) so the section fills the viewport with
+   real presence instead of clumping small at the top. */
+@media (max-width: 767px) {
+  .cap-inner {
+    padding: clamp(5rem, 9vh, 6rem) 1.25rem 2rem;
+  }
+  .cap-main {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 3vh, 2rem);
+    padding-top: clamp(0.5rem, 1.5vh, 1rem);
+  }
+  .cap-blur-x { opacity: 0.4; }
 
-.skill-card.is-hovered .card-arrow {
-  color: rgba(167, 139, 250, 0.8);
-  transform: translateX(4px);
-}
+  /* Compact rail at top — small progress indicator, not the focus */
+  .cap-rail { gap: clamp(0.9rem, 2.5vh, 1.5rem); }
+  .cap-groups {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+  .cap-group { gap: 0.5rem; }
+  .cap-group.is-active { transform: none; }
+  .cap-group__num { font-size: 0.65rem; }
+  .cap-group__name { font-size: clamp(1rem, 4.5vw, 1.4rem); }
 
-/* Smooth text transitions back to default */
-.card-number,
-.card-title,
-.card-desc {
-  transition: color 0.3s ease;
+  /* Detail panel — the active group LABEL becomes a hero word,
+     blurb sits beneath it. This is the focal point on mobile. */
+  .cap-detail {
+    max-width: none;
+    min-height: auto;
+    padding-top: 1.1rem;
+  }
+  .cap-detail__tagline {
+    font-size: clamp(2.6rem, 13vw, 4rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    line-height: 0.95;
+    margin-bottom: 0.85rem;
+  }
+  .cap-detail__text {
+    font-size: 0.9rem;
+    line-height: 1.65;
+    max-width: 32ch;
+  }
+
+  /* Services list anchored to the bottom, type bumped */
+  .cap-list {
+    margin-top: auto;
+    gap: clamp(0.85rem, 2.2vh, 1.4rem);
+  }
+  .cap-list__group { gap: clamp(0.2rem, 0.55vh, 0.4rem); }
+  .cap-service.is-hovered { transform: none; }
+  .cap-service__arrow { display: none; }
+  .cap-service__title { font-size: clamp(1.65rem, 7vw, 2.2rem); }
+  .cap-service__tagline { display: none; }
 }
 
 /* ── WorkShowcase / Projects Grid ───────────────────────────────── */
@@ -1347,20 +1214,42 @@ body.nav-menu-open [data-cursor-canvas] {
 }
 
 @media (max-width: 767px) {
-  .footer-headline__great {
-    align-self: flex-start;
+  /* Tighter side padding gives the headline more room */
+  .footer-content {
+    padding: clamp(1.75rem, 5vh, 3rem) 1.25rem;
   }
 
+  /* Headline takes up more of the viewport with bigger type */
+  .footer-headline {
+    padding-bottom: 1.25rem;
+  }
+  .footer-headline__lets {
+    font-size: clamp(3.5rem, 14vw, 6rem);
+  }
+  .footer-headline__something {
+    font-size: clamp(4.5rem, 20vw, 8rem);
+    line-height: 0.88;
+  }
+  .footer-headline__great {
+    align-self: flex-start;
+    font-size: clamp(3.2rem, 13vw, 5.5rem);
+  }
+
+  /* Email + socials sit closer together, email a touch bigger */
+  .footer-email-link {
+    font-size: clamp(1rem, 4.5vw, 1.5rem);
+  }
   .footer-email-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.25rem;
+    gap: 1.5rem;
   }
 
   .footer-colophon {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    padding-top: 0.75rem;
   }
 }
 
@@ -1925,4 +1814,662 @@ body.nav-menu-open [data-cursor-canvas] {
   .team-member__globe {
     width: 70vw;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   TESTIMONIALS — cinematic intro title, then scroll-driven rainbow
+   sweep across each quote's letters (left → right).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.quotes-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+.quotes-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(5.5rem, 9vh, 7.5rem) clamp(1.5rem, 4vw, 4rem)
+           clamp(2rem, 4vh, 3.5rem);
+}
+
+.quotes-topbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.quotes-topbar__label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+.quotes-topbar__rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.12);
+}
+.quotes-topbar__num {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(0, 0, 0, 0.6);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Stage — title + quote sets overlay each other */
+.quotes-stage {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Cinematic intro title — fills the centre during first 28% of scroll,
+   then fades + scales + blurs out as quote phase begins. */
+.quotes-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: none;
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.quotes-title.is-out {
+  opacity: 0;
+  transform: scale(0.92) translateY(-30px);
+  filter: blur(16px);
+}
+.quotes-title__text {
+  font-size: clamp(3rem, 10vw, 8.5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  margin: 0;
+  max-width: 16ch;
+  color: #0a0a0a;
+  user-select: none;
+}
+
+/* Quote sets — inactive slid down + blurred + scaled; active sits at rest */
+.quote-set {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(40px) scale(0.94);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+.quote-set.is-active {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.quote-text {
+  font-size: clamp(2rem, 5.5vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin: 0;
+  max-width: 22ch;
+  user-select: none;
+}
+
+/* Word stays unbreakable; letters wrap as word units */
+.quote-word {
+  display: inline-block;
+  white-space: nowrap;
+  margin-right: 0.35em;
+}
+
+/* Per-letter colour sweep:
+   --p (0 → 1) is set inline via JS based on scroll position.
+   At p=0 → outline-only dark stroke, transparent fill.
+   At p=1 → filled with the letter's rainbow colour + soft glow.
+   The stroke alpha fades down as the fill comes up, so the transition
+   feels like the letter "ignites" instead of doubling up its outline. */
+.quote-letter {
+  --p: 0;
+  --r: 192;
+  --g: 132;
+  --b: 252;
+  display: inline-block;
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, calc(0.75 - var(--p) * 0.55));
+  color: rgba(var(--r), var(--g), var(--b), var(--p));
+  filter: drop-shadow(
+    0 0 calc(var(--p) * 5px)
+    rgba(var(--r), var(--g), var(--b), calc(var(--p) * 0.55))
+  );
+}
+
+/* Author — placeholder during title so the layout doesn't jump */
+.quotes-author {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  min-height: 3rem;
+  animation: quotes-fade 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.quotes-author__name {
+  font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: #0a0a0a;
+}
+.quotes-author__role {
+  font-size: clamp(0.7rem, 0.95vw, 0.85rem);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.5);
+}
+@keyframes quotes-fade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Progress bar — fills with rainbow as quote phases advance */
+.quotes-progress {
+  margin-top: clamp(1.5rem, 3vh, 2.5rem);
+}
+.quotes-progress__bar {
+  position: relative;
+  height: 1px;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+.quotes-progress__fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #c084fc, #818cf8, #38bdf8, #f472b6, #e879f9);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 767px) {
+  .quotes-inner {
+    padding: clamp(5rem, 9vh, 6rem) 1.25rem 2rem;
+  }
+  .quotes-title__text {
+    font-size: clamp(2.4rem, 12vw, 4rem);
+    max-width: 12ch;
+  }
+  .quote-text {
+    font-size: clamp(1.8rem, 8vw, 2.6rem);
+    max-width: 14ch;
+  }
+  .quote-letter {
+    -webkit-text-stroke-width: 1.2px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PROCESS — pinned, centered, white. A big visual in the middle that
+   morphs cinematically per stage (mind-map → wireframe draw → code
+   typing → launch metrics).
+   ═══════════════════════════════════════════════════════════════════ */
+
+.process-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+.process-inner {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(5.5rem, 9vh, 7.5rem) clamp(1.5rem, 4vw, 4rem)
+           clamp(2rem, 4vh, 3.5rem);
+}
+
+/* Top bar — hero motif (full-width) */
+.process-topbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.process-topbar__label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+.process-topbar__rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.12);
+}
+.process-topbar__num {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(0, 0, 0, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Centered stage meta (chip + big title) */
+.process-meta {
+  margin-top: clamp(1.5rem, 3vh, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  text-align: center;
+  animation: process-meta-fade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes process-meta-fade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.process-meta__chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 999px;
+  background: rgba(167, 139, 250, 0.06);
+}
+.process-meta__num   { color: #7c3aed; font-variant-numeric: tabular-nums; }
+.process-meta__sep   { color: rgba(0, 0, 0, 0.25); }
+.process-meta__name  { color: #0a0a0a; }
+.process-meta__title {
+  font-size: clamp(2.2rem, 5.5vw, 4.5rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #0a0a0a;
+  margin: 0;
+  max-width: 16ch;
+}
+
+/* Central visual — fills the middle of the section */
+.process-viz {
+  flex: 1;
+  width: 100%;
+  max-width: 880px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  margin: clamp(1.25rem, 2.5vh, 2rem) 0;
+  animation: process-viz-fade 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes process-viz-fade {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.viz-svg {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+
+/* Description — small + centered */
+.process-desc {
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  line-height: 1.65;
+  color: rgba(0, 0, 0, 0.55);
+  text-align: center;
+  max-width: 52ch;
+  margin: 0 0 clamp(1rem, 2vh, 1.5rem) 0;
+  animation: process-meta-fade 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.08s;
+}
+
+/* Progress dots — 4, current expanded */
+.process-dots {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.p-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.15);
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.p-dot.is-done   { background: rgba(167, 139, 250, 0.5); }
+.p-dot.is-active {
+  width: 28px;
+  background: linear-gradient(90deg, #c084fc, #f472b6);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Stage 0 — DISCOVER: mind-map. Central "BRIEF" node + 6 question
+   labels around it, connected by lines that draw in with stagger.
+   ───────────────────────────────────────────────────────────────────── */
+.viz-svg--discover { color: rgba(0, 0, 0, 0.6); }
+.viz-svg--discover .d-line {
+  stroke: rgba(0, 0, 0, 0.35);
+  stroke-width: 1.5;
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: d-draw 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.viz-svg--discover .d-line--1 { animation-delay: 0.20s; }
+.viz-svg--discover .d-line--2 { animation-delay: 0.30s; }
+.viz-svg--discover .d-line--3 { animation-delay: 0.40s; }
+.viz-svg--discover .d-line--4 { animation-delay: 0.50s; }
+.viz-svg--discover .d-line--5 { animation-delay: 0.60s; }
+.viz-svg--discover .d-line--6 { animation-delay: 0.70s; }
+@keyframes d-draw { to { stroke-dashoffset: 0; } }
+
+.viz-svg--discover .d-center circle {
+  fill: #0a0a0a;
+  transform-origin: 400px 230px;
+  animation: d-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+.viz-svg--discover .d-center text {
+  fill: #ffffff;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  animation: d-text 0.5s 0.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes d-pop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+@keyframes d-text {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.viz-svg--discover .d-q text {
+  fill: #0a0a0a;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: d-q-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.viz-svg--discover .d-q--1 text { animation-delay: 0.65s; fill: #7c3aed; }
+.viz-svg--discover .d-q--2 text { animation-delay: 0.75s; fill: #2563eb; }
+.viz-svg--discover .d-q--3 text { animation-delay: 0.85s; fill: #db2777; }
+.viz-svg--discover .d-q--4 text { animation-delay: 0.95s; fill: #0891b2; }
+.viz-svg--discover .d-q--5 text { animation-delay: 1.05s; fill: #7c3aed; }
+.viz-svg--discover .d-q--6 text { animation-delay: 1.15s; fill: #db2777; }
+@keyframes d-q-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Stage 1 — DESIGN: wireframe rects + lines drawing themselves in via
+   stroke-dashoffset, like watching someone sketch a layout.
+   ───────────────────────────────────────────────────────────────────── */
+.viz-svg--design .wf {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.65);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: d-draw 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.viz-svg--design .wf--1   { animation-delay: 0.10s; }
+.viz-svg--design .wf--1b  { animation-delay: 0.18s; }
+.viz-svg--design .wf--1c,
+.viz-svg--design .wf--1d,
+.viz-svg--design .wf--1e  { animation-delay: 0.22s; }
+.viz-svg--design .wf--2   { animation-delay: 0.45s; animation-duration: 0.7s; }
+.viz-svg--design .wf--2a  { animation-delay: 0.85s; }
+.viz-svg--design .wf--2b  { animation-delay: 0.95s; }
+.viz-svg--design .wf--2c  { animation-delay: 1.05s; }
+.viz-svg--design .wf--3   { animation-delay: 1.20s; }
+.viz-svg--design .wf--4   { animation-delay: 1.35s; }
+.viz-svg--design .wf--5   { animation-delay: 1.50s; }
+
+/* ─────────────────────────────────────────────────────────────────────
+   Stage 2 — BUILD: realistic code editor; lines wipe in left → right.
+   ───────────────────────────────────────────────────────────────────── */
+.editor {
+  width: 100%;
+  max-width: 760px;
+  background: #0c0c0f;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    0 24px 60px rgba(80, 50, 200, 0.18),
+    0 48px 120px rgba(80, 50, 200, 0.1);
+}
+.editor__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 38px;
+  padding: 0 0.85rem;
+  background: #16161c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.editor__dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+.editor__dot:nth-child(1) { background: #ff5f57; }
+.editor__dot:nth-child(2) { background: #febc2e; }
+.editor__dot:nth-child(3) { background: #28c840; }
+.editor__title {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.editor__body {
+  margin: 0;
+  padding: 1.5rem 1.5rem;
+  color: #e2e8f0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: clamp(0.75rem, 1vw, 0.95rem);
+  line-height: 1.65;
+  display: flex;
+  flex-direction: column;
+  white-space: pre;
+}
+.cline {
+  display: block;
+  white-space: pre;
+  clip-path: inset(0 100% 0 0);
+  opacity: 0;
+  animation: cline-type 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.cline--1 { animation-delay: 0.15s; }
+.cline--2 { animation-delay: 0.40s; }
+.cline--3 { animation-delay: 0.65s; }
+.cline--4 { animation-delay: 0.90s; }
+.cline--5 { animation-delay: 1.15s; }
+.cline--6 { animation-delay: 1.40s; }
+.cline--7 { animation-delay: 1.65s; }
+@keyframes cline-type {
+  to { clip-path: inset(0 0% 0 0); opacity: 1; }
+}
+.t-key  { color: #c084fc; }
+.t-prop { color: #38bdf8; }
+.t-val  { color: #f472b6; }
+.cline--caret {
+  color: #a78bfa;
+  animation: cline-type 0.4s 1.65s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+             caret-blink 0.9s 2.1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% { opacity: 0; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Stage 3 — LAUNCH: finished site mockup with rainbow blocks +
+   Lighthouse-style score circles popping in.
+   ───────────────────────────────────────────────────────────────────── */
+.launch {
+  width: 100%;
+  max-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.launch-site {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 24px 50px rgba(80, 50, 200, 0.12);
+  animation: launch-pop 0.55s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+.ls-block { border-radius: 5px; }
+.ls-block--hero {
+  height: clamp(120px, 22vh, 180px);
+  background: linear-gradient(120deg, #c084fc, #38bdf8 50%, #f472b6);
+  position: relative;
+  overflow: hidden;
+}
+.ls-block__shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 70%
+  );
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+.ls-row { display: flex; gap: 0.85rem; }
+.ls-block--card {
+  flex: 1;
+  height: clamp(60px, 11vh, 100px);
+  background: linear-gradient(135deg, rgba(192, 132, 252, 0.25), rgba(56, 189, 248, 0.25));
+  border: 1px solid rgba(167, 139, 250, 0.25);
+}
+@keyframes launch-pop {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.launch-scores {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.lscore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0.5rem 0.95rem;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1.5px solid #16a34a;
+  border-radius: 999px;
+  opacity: 0;
+  transform: scale(0.7);
+  animation: lscore-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(0.5s + var(--i, 0) * 0.12s);
+}
+@keyframes lscore-pop {
+  to { opacity: 1; transform: scale(1); }
+}
+.lscore__value {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #16a34a;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.lscore__label {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.5);
+}
+.launch-live {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #16a34a;
+  margin-left: 0.5rem;
+  opacity: 0;
+  animation: launch-live-in 0.4s 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes launch-live-in {
+  to { opacity: 1; }
+}
+
+/* ── mobile ── */
+@media (max-width: 767px) {
+  .process-inner {
+    padding: clamp(4.5rem, 8vh, 6rem) 1.25rem 2rem;
+  }
+  .process-meta__title { font-size: clamp(1.7rem, 7vw, 2.4rem); }
+  .process-viz { margin: clamp(1rem, 2vh, 1.5rem) 0; }
+  .editor__body { font-size: 0.72rem; padding: 1rem; }
+  .viz-svg--discover .d-q text { font-size: 32px; }
+  .lscore__value { font-size: 0.9rem; }
 }
