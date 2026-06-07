@@ -25,7 +25,7 @@ const SITE_URL = "https://xadastudio.com";
 const SITE_NAME = "Xada Studio";
 const SITE_TAGLINE = "Premium Web Design & Development Studio";
 const SITE_DESCRIPTION =
-  "Xada Studio designs and builds premium, high-performance websites — landing pages, business sites, ecommerce stores, and immersive WebGL experiences with Next.js, React, GSAP, and Three.js.";
+  "Xada Studio designs and builds premium, high-performance websites — and software products for the internet, like xadaHub. From landing pages, business sites, and ecommerce to immersive WebGL and AI-powered tools, built with Next.js, React, GSAP, and Three.js.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -41,6 +41,10 @@ export const metadata: Metadata = {
   keywords: [
     "web design studio",
     "web development agency",
+    "software studio",
+    "software engineering company",
+    "software product development",
+    "AI website builder",
     "Next.js development",
     "React development",
     "landing page design",
@@ -50,6 +54,7 @@ export const metadata: Metadata = {
     "Three.js",
     "GSAP animation",
     "premium web design",
+    "xadaHub",
     "Xada Studio",
   ],
   alternates: {
@@ -113,6 +118,10 @@ const ORG_JSON_LD = {
   knowsAbout: [
     "Web Design",
     "Web Development",
+    "Software Engineering",
+    "Software Product Development",
+    "Artificial Intelligence",
+    "AI Applications",
     "Next.js",
     "React",
     "TypeScript",
@@ -129,6 +138,8 @@ const ORG_JSON_LD = {
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "Ecommerce Store Design & Development" } },
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "Custom Web Features & Integrations" } },
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "WebGL & Animation" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Custom Software Development" } },
+    { "@type": "Offer", itemOffered: { "@type": "Service", name: "AI-Powered Product Development" } },
     { "@type": "Offer", itemOffered: { "@type": "Service", name: "SEO & Web Performance" } },
   ],
 };

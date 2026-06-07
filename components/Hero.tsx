@@ -300,7 +300,7 @@ export default function Hero(): React.JSX.Element {
             className="text-xs tracking-widest uppercase leading-relaxed text-center md:text-left md:max-w-55 md:order-first"
             style={{ color: "rgba(0,0,0,0.35)" }}
           >
-            Web Design Studio
+            Design &amp; Software Studio
             <br />
             Est. 2025
           </p>

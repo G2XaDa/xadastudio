@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
+import HubAnnouncement from "@/components/HubAnnouncement";
 import Process from "@/components/Process";
 import SkillsShowcase from "@/components/SkillsShowcase";
 import Testimonials from "@/components/Testimonials";
@@ -15,6 +16,7 @@ export default function Home() {
         <Testimonials />
         <Footer />
       </main>
+      <HubAnnouncement />
     </>
   );
 }

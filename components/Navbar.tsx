@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePageTransition } from "@/components/PageTransition";
 
 const EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
-const NAV_LINKS = ["About", "Contact"] as const;
+const NAV_LINKS = ["About", "Work", "Contact"] as const;
 
 function NavLink({
   label,
@@ -243,6 +243,7 @@ function MenuButton({
 
 const LINK_ROUTES: Partial<Record<typeof NAV_LINKS[number], string>> = {
   About:   "/",
+  Work:    "/work",
   Contact: "/contact",
 };
 
