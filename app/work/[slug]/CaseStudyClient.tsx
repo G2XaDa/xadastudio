@@ -1,12 +1,81 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePageTransition } from "@/components/PageTransition";
 import type { CaseStudy } from "@/lib/caseStudies";
 
 const PAD = "clamp(1.5rem, 4vw, 4rem)";
+
+// A full-page screenshot the visitor can grab & drag to pan through (mouse),
+// or scroll natively (touch). Shows a centered "Drag to explore" hint until
+// the first interaction.
+function FullPagePreview({ src, alt }: { src: string; alt: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ active: false, startY: 0, startTop: 0 });
+  const [hintHidden, setHintHidden] = useState(false);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return; // touch uses native scroll
+    const el = scrollRef.current;
+    if (!el || el.scrollHeight <= el.clientHeight) return;
+    drag.current = { active: true, startY: e.clientY, startTop: el.scrollTop };
+    el.setPointerCapture(e.pointerId);
+    el.classList.add("is-grabbing");
+    setHintHidden(true);
+    e.preventDefault();
+  };
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current.active) return;
+    const el = scrollRef.current;
+    if (el) el.scrollTop = drag.current.startTop - (e.clientY - drag.current.startY);
+  };
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    drag.current.active = false;
+    const el = scrollRef.current;
+    el?.classList.remove("is-grabbing");
+    try {
+      el?.releasePointerCapture(e.pointerId);
+    } catch {
+      /* pointer already released */
+    }
+  };
+
+  return (
+    <div className="cs-gallery-item">
+      <div
+        ref={scrollRef}
+        className="cs-gallery-scroll"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+        onPointerCancel={endDrag}
+        onScroll={() => setHintHidden(true)}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={alt}
+          draggable={false}
+          onLoad={() => {
+            ScrollTrigger.refresh();
+            window.dispatchEvent(new Event("resize"));
+          }}
+        />
+      </div>
+      <div
+        className={`cs-gallery-hint${hintHidden ? " is-hidden" : ""}`}
+        aria-hidden="true"
+      >
+        <span className="cs-gallery-hint__badge">
+          <span className="cs-gallery-hint__icon">↕</span>
+          Drag to explore
+        </span>
+      </div>
+    </div>
+  );
+}
 
 const BODY_SECTIONS = [
   { key: "challenge", label: "The Challenge" },
@@ -128,15 +197,52 @@ export default function CaseStudyClient({
           display: block; width: 100%; height: 100%;
           object-fit: cover; object-position: top center;
         }
+        /* Full-page screenshots: a fixed frame the visitor grabs & drags to
+           pan through the whole site (native scroll on touch). */
         .cs-gallery-item {
-          width: 100%; height: clamp(320px, 58vh, 620px);
+          --fh: clamp(360px, 72vh, 640px);
+          position: relative;
+          width: 100%; height: var(--fh);
           border-radius: 4px; overflow: hidden;
           margin-bottom: clamp(1rem, 3vw, 2rem);
           box-shadow: 0 24px 70px rgba(0,0,0,0.12);
+          background: #f4f1ec;
         }
-        .cs-gallery-item img {
-          display: block; width: 100%; height: 100%;
-          object-fit: cover; object-position: top center;
+        .cs-gallery-scroll {
+          height: 100%; width: 100%;
+          overflow-y: auto; overflow-x: hidden;
+          cursor: grab;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+          touch-action: pan-y;
+        }
+        .cs-gallery-scroll::-webkit-scrollbar { display: none; }
+        .cs-gallery-scroll.is-grabbing { cursor: grabbing; }
+        .cs-gallery-scroll img {
+          display: block; width: 100%; height: auto;
+          user-select: none; -webkit-user-drag: none;
+        }
+        .cs-gallery-hint {
+          position: absolute; inset: 0;
+          display: flex; align-items: center; justify-content: center;
+          pointer-events: none; transition: opacity 0.5s ease;
+        }
+        .cs-gallery-hint.is-hidden { opacity: 0; }
+        .cs-gallery-hint__badge {
+          display: inline-flex; align-items: center; gap: 0.6rem;
+          background: rgba(10,10,10,0.6); color: #fff;
+          padding: 0.7rem 1.15rem; border-radius: 100px;
+          font-size: 0.64rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+          -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+          box-shadow: 0 12px 34px rgba(0,0,0,0.28);
+        }
+        .cs-gallery-hint__icon {
+          display: inline-block; font-size: 0.95rem; line-height: 1;
+          animation: cs-bob 1.8s ease-in-out infinite;
+        }
+        @keyframes cs-bob {
+          0%, 100% { transform: translateY(-2px); }
+          50%      { transform: translateY(2px); }
         }
         .cs-link { background: transparent; border: none; cursor: pointer; padding: 0; font-family: var(--font-display); }
         .cs-next-name {
@@ -310,10 +416,11 @@ export default function CaseStudyClient({
         {/* ── Gallery ── */}
         <div className="cs-wrap" style={{ paddingTop: "clamp(3rem, 7vh, 5rem)" }}>
           {study.gallery.map((src, i) => (
-            <div className="cs-gallery-item" key={`${src}-${i}`}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={`${study.name} — view ${i + 1}`} />
-            </div>
+            <FullPagePreview
+              key={`${src}-${i}`}
+              src={src}
+              alt={`${study.name} — full website preview`}
+            />
           ))}
         </div>
 
